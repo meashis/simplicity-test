@@ -18,6 +18,20 @@ class User {
             .query('INSERT INTO Users (username, password) VALUES (@username, @password)');
     }
 
+    /**
+     * Retrieves a user by username.
+     * @param {sql.ConnectionPool} pool - The database connection pool.
+     * @param {string} username - The username to search for.
+     * @returns {Promise<Object|null>} The user object or null if not found.
+     */
+        static async getUserByUsername(pool, username) {
+            const result = await pool.request()
+                .input('username', sql.NVarChar, username)
+                .query('SELECT * FROM Users WHERE username = @username');
+    
+            return result.recordset.length > 0 ? result.recordset[0] : null;
+        }
+
     // Add other methods as necessary
 }
 

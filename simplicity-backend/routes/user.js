@@ -100,7 +100,9 @@ router.post('/login', async (req, res) => {
     try {
         const pool = req.db;
         // Fetch user and verify password here
-        const user = {}; // Replace with actual user fetching logic
+        // Replace with actual user fetching logic
+
+        const user = await User.getUserByUsername(pool, username)
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
