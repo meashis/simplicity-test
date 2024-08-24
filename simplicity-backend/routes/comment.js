@@ -15,7 +15,7 @@ const auth = require('../middleware/auth');
  *         id:
  *           type: integer
  *           description: The auto-generated id of the comment
- *         post_id:
+ *         postId:
  *           type: integer
  *           description: The id of the related post
  *         user_id:
