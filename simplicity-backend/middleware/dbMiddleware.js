@@ -1,20 +1,18 @@
-const { poolPromise } = require('../config/db');
-
 /**
- * Middleware to inject the database connection into each request.
- * @param {Object} req - Express request object.
- * @param {Object} res - Express response object.
- * @param {Function} next - Express next middleware function.
+ * Middleware factory to inject the database connection into each request.
+ * @param {sql.ConnectionPool} pool - The database connection pool.
+ * @returns {Function} - The middleware function.
  */
-async function dbMiddleware(req, res, next) {
-    try {
-        const pool = await poolPromise;
-        req.db = pool;
-        next();
-    } catch (err) {
-        console.error('Failed to connect to the database', err);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
+function dbMiddleware(pool) {
+    return async (req, res, next) => {
+        try {
+            req.db = pool;
+            next();
+        } catch (err) {
+            console.error('Failed to inject the database connection', err);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    };
 }
 
 module.exports = dbMiddleware;
