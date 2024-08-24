@@ -16,7 +16,20 @@ const options = {
                 url: `http://localhost:${process.env.PORT || 500}`,
                 description: 'Development server'
             }
-        ]
+        ],
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT',
+                    description: 'Enter your JWT token in the format **Bearer &lt;token&gt;**'
+                }
+            }
+        },
+        security: [{
+            bearerAuth: []
+        }]
     },
     apis: ['./routes/*.js'], // Path to the API docs (adjust based on your file structure)
 };
