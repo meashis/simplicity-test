@@ -2,6 +2,24 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:5000/api'; // Replace with your Node.js API URL
 
+const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return { Authorization: `Bearer ${token}` };
+};
+
+export const loginUser = async (username, password) => {
+    try {
+        const response = await axios.post(`${API_URL}/users/login`, {
+            username,
+            password,
+        });
+        return response.data; // Assuming the response contains the token
+    } catch (error) {
+        // Handle error appropriately
+        throw error.response ? error.response.data : { message: 'Network Error' };
+    }
+};
+
 export const getPosts = async () => {
     return await axios.get(`${API_URL}/posts`);
 };

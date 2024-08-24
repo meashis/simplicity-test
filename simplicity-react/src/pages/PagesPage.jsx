@@ -1,4 +1,3 @@
-import React from 'react';
 import PageList from '../components/PageList';
 import PageForm from '../components/PageForm';
 

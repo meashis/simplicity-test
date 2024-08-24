@@ -1,56 +1,50 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-// import './App.css'
-
-// function App() {
-//   const [count, setCount] = useState(0)
-
-//   return (
-//     <>
-//       <div>
-//         <a href="https://vitejs.dev" target="_blank">
-//           <img src={viteLogo} className="logo" alt="Vite logo" />
-//         </a>
-//         <a href="https://react.dev" target="_blank">
-//           <img src={reactLogo} className="logo react" alt="React logo" />
-//         </a>
-//       </div>
-//       <h1>Vite + React</h1>
-//       <div className="card">
-//         <button onClick={() => setCount((count) => count + 1)}>
-//           count is {count}
-//         </button>
-//         <p>
-//           Edit <code>src/App.jsx</code> and save to test HMR
-//         </p>
-//       </div>
-//       <p className="read-the-docs">
-//         Click on the Vite and React logos to learn more
-//       </p>
-//     </>
-//   )
-// }
-
-// export default App
-
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import PostsPage from './pages/PostsPage';
-import PagesPage from './pages/PagesPage';
-import CommentsPage from './pages/CommentsPage';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import PostsPage from "./pages/PostsPage";
+import PagesPage from "./pages/PagesPage";
+import CommentsPage from "./pages/CommentsPage";
+import Welcome from "./pages/Welcome";
+import LoginPage from "./pages/LoginPage";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Footer from "./components/Footer";
 
 function App() {
-    return (
-        <Router>
-            <div className="App">
-                <Routes>
-                    <Route path="/posts" element={<PostsPage />} />
-                    <Route path="/pages" element={<PagesPage />} />
-                    <Route path="/posts/:postId/comments" element={<CommentsPage />} />
-                </Routes>
-            </div>
-        </Router>
-    );
+  return (
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<Welcome />} />
+          <Route path="/login" element={<LoginPage />} />
+          {/* Protect these routes */}
+          <Route
+            path="/posts"
+            element={
+              <ProtectedRoute>
+                <PostsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/pages"
+            element={
+              <ProtectedRoute>
+                <PagesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/posts/:postId/comments"
+            element={
+              <ProtectedRoute>
+                <CommentsPage />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+        {/* Footer with Logout Button */}
+        <Footer />
+      </div>
+    </Router>
+  );
 }
 
 export default App;

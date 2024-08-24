@@ -1,5 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const cors = require('cors');
 const dbMiddleware = require('./middleware/dbMiddleware');
 const { poolPromise } = require('./config/db');
 const setupSwagger = require('./swagger');
@@ -23,6 +24,9 @@ async function startServer() {
 
         // Setup Swagger
         setupSwagger(app);
+
+        // CORS
+        app.use(cors());
 
         /**
          * User routes.
