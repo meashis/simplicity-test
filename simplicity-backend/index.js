@@ -33,7 +33,7 @@ app.use('/api/pages', require('./routes/page'));
  */
 app.use('/api/comments', require('./routes/comment'));
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 /**
  * Start the server and listen on the specified port.
