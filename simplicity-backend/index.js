@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const dbMiddleware = require('./middleware/dbMiddleware');
 const { poolPromise } = require('./config/db');
+const setupSwagger = require('./swagger');
 dotenv.config();
 
 /**
@@ -17,6 +18,9 @@ async function startServer() {
         // Middleware
         app.use(express.json());
         app.use(dbMiddleware(pool)); // Inject the pool into dbMiddleware
+
+        // Setup Swagger
+        setupSwagger(app);
 
         /**
          * User routes.
