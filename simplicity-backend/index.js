@@ -17,6 +17,8 @@ async function startServer() {
 
         // Middleware
         app.use(express.json());
+        app.use(express.urlencoded({ extended: true }));
+
         app.use(dbMiddleware(pool)); // Inject the pool into dbMiddleware
 
         // Setup Swagger
@@ -45,6 +47,16 @@ async function startServer() {
          * @module routes/comment
          */
         app.use('/api/comments', require('./routes/comment'));
+
+         /**
+         * Error handling middleware
+         */
+         app.use((err, req, res, next) => {
+            console.error(err.stack);
+            res.status(err.status || 500).json({
+                message: err.message || 'Internal Server Error',
+            });
+        });
 
         const PORT = process.env.PORT || 3000;
 

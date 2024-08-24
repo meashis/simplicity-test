@@ -31,6 +31,19 @@ class User {
     
             return result.recordset.length > 0 ? result.recordset[0] : null;
         }
+    /**
+     * Retrieves a user by id.
+     * @param {sql.ConnectionPool} pool - The database connection pool.
+     * @param {string} id - The id to search for.
+     * @returns {Promise<Object|null>} The user object or null if not found.
+     */
+        static async getUserById(pool, id) {
+            const result = await pool.request()
+                .input('id', sql.Int, id)
+                .query('SELECT * FROM Users WHERE id = @id');
+    
+            return result.recordset.length > 0 ? result.recordset[0] : null;
+        }
 
     // Add other methods as necessary
 }

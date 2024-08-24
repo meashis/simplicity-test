@@ -129,7 +129,7 @@ router.get('/:id', async (req, res) => {
 router.post('/', auth, async (req, res) => {
     try {
         const pool = req.db;
-        await Post.createPost(pool, req.user.id, req.body.title, req.body.content);
+        await Post.createPost(pool, req.user.username, req.body.title, req.body.content);
         res.status(201).json({ msg: 'Post created successfully' });
     } catch (err) {
         res.status(500).json({ error: err.message });
