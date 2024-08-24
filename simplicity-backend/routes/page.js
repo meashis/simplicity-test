@@ -1,32 +1,32 @@
 const express = require('express');
 const router = express.Router();
-const Post = require('../models/Post');
+const Page = require('../models/Page');
 const auth = require('../middleware/auth');
 
 /**
- * Route to create a new blog post.
- * @route POST /api/posts
+ * Route to create a new page.
+ * @route POST /api/pages
  * @access Private
  */
 router.post('/', auth, async (req, res) => {
     try {
         const pool = req.db;
-        await Post.createPost(pool, req.user.id, req.body.title, req.body.content);
-        res.status(201).json({ msg: 'Post created successfully' });
+        await Page.createPage(pool, req.body.title, req.body.content);
+        res.status(201).json({ msg: 'Page created successfully' });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
 /**
- * Route to get all blog posts.
- * @route GET /api/posts
+ * Route to get all pages.
+ * @route GET /api/pages
  * @access Public
  */
 router.get('/', async (req, res) => {
     try {
         const pool = req.db;
-        const result = await pool.request().query('SELECT * FROM Posts');
+        const result = await pool.request().query('SELECT * FROM Pages');
         res.json(result.recordset);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -34,8 +34,8 @@ router.get('/', async (req, res) => {
 });
 
 /**
- * Route to get a blog post by ID.
- * @route GET /api/posts/:id
+ * Route to get a page by ID.
+ * @route GET /api/pages/:id
  * @access Public
  */
 router.get('/:id', async (req, res) => {
@@ -43,10 +43,10 @@ router.get('/:id', async (req, res) => {
         const pool = req.db;
         const result = await pool.request()
             .input('id', req.params.id)
-            .query('SELECT * FROM Posts WHERE id = @id');
+            .query('SELECT * FROM Pages WHERE id = @id');
 
         if (result.recordset.length === 0) {
-            return res.status(404).json({ msg: 'Post not found' });
+            return res.status(404).json({ msg: 'Page not found' });
         }
 
         res.json(result.recordset[0]);
@@ -56,8 +56,8 @@ router.get('/:id', async (req, res) => {
 });
 
 /**
- * Route to update a blog post by ID.
- * @route PUT /api/posts/:id
+ * Route to update a page by ID.
+ * @route PUT /api/pages/:id
  * @access Private
  */
 router.put('/:id', auth, async (req, res) => {
@@ -67,17 +67,17 @@ router.put('/:id', auth, async (req, res) => {
             .input('id', req.params.id)
             .input('title', req.body.title)
             .input('content', req.body.content)
-            .query('UPDATE Posts SET title = @title, content = @content, updated_at = GETDATE() WHERE id = @id');
+            .query('UPDATE Pages SET title = @title, content = @content, updated_at = GETDATE() WHERE id = @id');
 
-        res.json({ msg: 'Post updated successfully' });
+        res.json({ msg: 'Page updated successfully' });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
 /**
- * Route to delete a blog post by ID.
- * @route DELETE /api/posts/:id
+ * Route to delete a page by ID.
+ * @route DELETE /api/pages/:id
  * @access Private
  */
 router.delete('/:id', auth, async (req, res) => {
@@ -85,9 +85,9 @@ router.delete('/:id', auth, async (req, res) => {
         const pool = req.db;
         await pool.request()
             .input('id', req.params.id)
-            .query('DELETE FROM Posts WHERE id = @id');
+            .query('DELETE FROM Pages WHERE id = @id');
 
-        res.json({ msg: 'Post deleted successfully' });
+        res.json({ msg: 'Page deleted successfully' });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
