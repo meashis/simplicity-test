@@ -7,9 +7,58 @@ const auth = require('../middleware/auth');
 require('dotenv').config();
 
 /**
- * Route to register a new user.
- * @route POST /api/users/register
- * @access Public
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - username
+ *         - password
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: The auto-generated id of the user
+ *         username:
+ *           type: string
+ *           description: The user's username
+ *         password:
+ *           type: string
+ *           description: The user's hashed password
+ *         created_at:
+ *           type: string
+ *           format: date-time
+ *           description: The date the user was created
+ *         updated_at:
+ *           type: string
+ *           format: date-time
+ *           description: The date the user was last updated
+ */
+
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: The users managing API
+ */
+
+/**
+ * @swagger
+ * /api/users/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       201:
+ *         description: The user was successfully created
+ *       500:
+ *         description: Some server error
  */
 router.post('/register', async (req, res) => {
     const { username, password } = req.body;
@@ -26,17 +75,31 @@ router.post('/register', async (req, res) => {
 });
 
 /**
- * Route to authenticate a user and get a token.
- * @route POST /api/users/login
- * @access Public
+ * @swagger
+ * /api/users/login:
+ *   post:
+ *     summary: Log in a user and return a token
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       200:
+ *         description: Successfully logged in
+ *       400:
+ *         description: Invalid credentials
+ *       500:
+ *         description: Some server error
  */
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
     try {
         const pool = req.db;
-        // Here you would typically fetch the user from the database and compare passwords
-        // This is a simplified example:
+        // Fetch user and verify password here
         const user = {}; // Replace with actual user fetching logic
 
         const isMatch = await bcrypt.compare(password, user.password);
@@ -65,9 +128,18 @@ router.post('/login', async (req, res) => {
 });
 
 /**
- * Route to get user profile.
- * @route GET /api/users/profile
- * @access Private
+ * @swagger
+ * /api/users/profile:
+ *   get:
+ *     summary: Get the logged-in user's profile
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: The user's profile
+ *       500:
+ *         description: Some server error
  */
 router.get('/profile', auth, async (req, res) => {
     try {

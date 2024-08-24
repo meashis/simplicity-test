@@ -4,24 +4,56 @@ const Page = require('../models/Page');
 const auth = require('../middleware/auth');
 
 /**
- * Route to create a new page.
- * @route POST /api/pages
- * @access Private
+ * @swagger
+ * components:
+ *   schemas:
+ *     Page:
+ *       type: object
+ *       required:
+ *         - title
+ *         - content
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: The auto-generated id of the page
+ *         title:
+ *           type: string
+ *           description: The title of the page
+ *         content:
+ *           type: string
+ *           description: The content of the page
+ *         created_at:
+ *           type: string
+ *           format: date-time
+ *           description: The date the page was created
+ *         updated_at:
+ *           type: string
+ *           format: date-time
+ *           description: The date the page was last updated
  */
-router.post('/', auth, async (req, res) => {
-    try {
-        const pool = req.db;
-        await Page.createPage(pool, req.body.title, req.body.content);
-        res.status(201).json({ msg: 'Page created successfully' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
 
 /**
- * Route to get all pages.
- * @route GET /api/pages
- * @access Public
+ * @swagger
+ * tags:
+ *   name: Pages
+ *   description: The pages managing API
+ */
+
+/**
+ * @swagger
+ * /api/pages:
+ *   get:
+ *     summary: Returns the list of all the pages
+ *     tags: [Pages]
+ *     responses:
+ *       200:
+ *         description: The list of the pages
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Page'
  */
 router.get('/', async (req, res) => {
     try {
@@ -34,9 +66,27 @@ router.get('/', async (req, res) => {
 });
 
 /**
- * Route to get a page by ID.
- * @route GET /api/pages/:id
- * @access Public
+ * @swagger
+ * /api/pages/{id}:
+ *   get:
+ *     summary: Get the page by id
+ *     tags: [Pages]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The page id
+ *     responses:
+ *       200:
+ *         description: The page description by id
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Page'
+ *       404:
+ *         description: The page was not found
  */
 router.get('/:id', async (req, res) => {
     try {
@@ -56,9 +106,59 @@ router.get('/:id', async (req, res) => {
 });
 
 /**
- * Route to update a page by ID.
- * @route PUT /api/pages/:id
- * @access Private
+ * @swagger
+ * /api/pages:
+ *   post:
+ *     summary: Create a new page
+ *     tags: [Pages]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Page'
+ *     responses:
+ *       201:
+ *         description: The page was successfully created
+ *       500:
+ *         description: Some server error
+ */
+router.post('/', auth, async (req, res) => {
+    try {
+        const pool = req.db;
+        await Page.createPage(pool, req.body.title, req.body.content);
+        res.status(201).json({ msg: 'Page created successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+/**
+ * @swagger
+ * /api/pages/{id}:
+ *   put:
+ *     summary: Update the page by id
+ *     tags: [Pages]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The page id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Page'
+ *     responses:
+ *       200:
+ *         description: The page was updated
+ *       404:
+ *         description: The page was not found
+ *       500:
+ *         description: Some server error
  */
 router.put('/:id', auth, async (req, res) => {
     try {
@@ -76,9 +176,25 @@ router.put('/:id', auth, async (req, res) => {
 });
 
 /**
- * Route to delete a page by ID.
- * @route DELETE /api/pages/:id
- * @access Private
+ * @swagger
+ * /api/pages/{id}:
+ *   delete:
+ *     summary: Delete the page by id
+ *     tags: [Pages]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The page id
+ *     responses:
+ *       200:
+ *         description: The page was deleted
+ *       404:
+ *         description: The page was not found
+ *       500:
+ *         description: Some server error
  */
 router.delete('/:id', auth, async (req, res) => {
     try {

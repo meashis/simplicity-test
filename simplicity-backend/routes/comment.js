@@ -4,9 +4,56 @@ const Comment = require('../models/Comment');
 const auth = require('../middleware/auth');
 
 /**
- * Route to add a comment to a blog post.
- * @route POST /api/comments
- * @access Private
+ * @swagger
+ * components:
+ *   schemas:
+ *     Comment:
+ *       type: object
+ *       required:
+ *         - comment
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: The auto-generated id of the comment
+ *         post_id:
+ *           type: integer
+ *           description: The id of the related post
+ *         user_id:
+ *           type: integer
+ *           description: The id of the user who made the comment
+ *         comment:
+ *           type: string
+ *           description: The comment text
+ *         commented_at:
+ *           type: string
+ *           format: date-time
+ *           description: The date the comment was created
+ */
+
+/**
+ * @swagger
+ * tags:
+ *   name: Comments
+ *   description: The comments managing API
+ */
+
+/**
+ * @swagger
+ * /api/comments:
+ *   post:
+ *     summary: Add a new comment to a blog post
+ *     tags: [Comments]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Comment'
+ *     responses:
+ *       201:
+ *         description: The comment was successfully created
+ *       500:
+ *         description: Some server error
  */
 router.post('/', auth, async (req, res) => {
     try {
@@ -19,9 +66,27 @@ router.post('/', auth, async (req, res) => {
 });
 
 /**
- * Route to get comments by post ID.
- * @route GET /api/comments/:postId
- * @access Public
+ * @swagger
+ * /api/comments/{postId}:
+ *   get:
+ *     summary: Get comments by post ID
+ *     tags: [Comments]
+ *     parameters:
+ *       - in: path
+ *         name: postId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The id of the post
+ *     responses:
+ *       200:
+ *         description: The comments for the post
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Comment'
  */
 router.get('/:postId', async (req, res) => {
     try {
@@ -37,9 +102,23 @@ router.get('/:postId', async (req, res) => {
 });
 
 /**
- * Route to delete a comment by ID.
- * @route DELETE /api/comments/:id
- * @access Private
+ * @swagger
+ * /api/comments/{id}:
+ *   delete:
+ *     summary: Delete the comment by id
+ *     tags: [Comments]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The comment id
+ *     responses:
+ *       200:
+ *         description: The comment was deleted
+ *       500:
+ *         description: Some server error
  */
 router.delete('/:id', auth, async (req, res) => {
     try {
