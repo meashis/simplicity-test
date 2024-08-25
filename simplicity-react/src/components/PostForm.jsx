@@ -1,43 +1,61 @@
-import React, { useState } from 'react';
-import { createPost, updatePost } from '../api/api';
+import React, { useState } from "react";
+import { createPost, updatePost } from "../api/api";
 
-const PostForm = ({ postId, existingPost, onSuccess }) => {
-    const [title, setTitle] = useState(existingPost?.title || '');
-    const [content, setContent] = useState(existingPost?.content || '');
+import "./PostForm.css";
+import RicTextEditor from "./RicTextEditor";
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+const PostForm = ({ postId, existingPost, onSuccess, closeModal }) => {
+  const [title, setTitle] = useState(existingPost?.title || "");
+  const [content, setContent] = useState(existingPost?.content || "");
 
-        const post = { title, content };
-        if (postId) {
-            await updatePost(postId, post);
-        } else {
-            await createPost(post);
-        }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        onSuccess();
-    };
+    const post = { title, content };
+    if (postId) {
+      await updatePost(postId, post);
+    } else {
+      await createPost(post);
+    }
 
-    return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label>Title:</label>
-                <input
-                    type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                />
-            </div>
-            <div>
-                <label>Content:</label>
-                <textarea
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                ></textarea>
-            </div>
-            <button type="submit">{postId ? 'Update' : 'Create'}</button>
-        </form>
-    );
+    onSuccess();
+  };
+
+  return (
+    <div className="post-form-wrapper">
+      <form onSubmit={handleSubmit}>
+        <h2>Add Post</h2>
+        <div className="post-form-title">
+          <label>Title:</label>
+          <input
+            className="post-form-title-input"
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </div>
+        <div className="post-form-content">
+          <label>Content:</label>
+          <div className="rich-text-editor-quill">
+            <RicTextEditor setRichValue={(value) => setContent(value)} />
+          </div>
+          {/* <textarea
+            className="post-form-content-textarea"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+          ></textarea> */}
+        </div>
+        <div className="create-post-cta">
+          <button className="post-submit-button" type="submit">
+            {postId ? "Update" : "Create"}
+          </button>
+          <button className="cancel-submit-button" onClick={closeModal}>
+            close
+          </button>
+        </div>
+      </form>
+    </div>
+  );
 };
 
 export default PostForm;

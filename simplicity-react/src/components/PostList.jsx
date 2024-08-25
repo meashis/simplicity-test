@@ -1,35 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { getPosts, deletePost } from '../api/api';
 
-const PostList = () => {
-    const [posts, setPosts] = useState([]);
+const PostList = ({ lastFetched }) => {
+  const [posts, setPosts] = useState([]);
 
-    useEffect(() => {
-        fetchPosts();
-    }, []);
+  useEffect(() => {
+    fetchPosts();
+  }, [lastFetched]);
 
-    const fetchPosts = async () => {
-        const response = await getPosts();
-        setPosts(response.data);
-    };
+  const fetchPosts = async () => {
+    const response = await getPosts();
+    setPosts(response.data);
+  };
 
-    const handleDelete = async (id) => {
-        await deletePost(id);
-        fetchPosts();
-    };
+  const handleDelete = async (id) => {
+    await deletePost(id);
+    fetchPosts();
+  };
 
-    return (
-        <div>
-            <h2>Posts</h2>
-            <ul>
-                {posts.map((post) => (
-                    <li key={post.id}>
-                        {post.title} <button onClick={() => handleDelete(post.id)}>Delete</button>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
+  return (
+    <div>
+      <h2>Posts</h2>
+      <ul>
+        {posts.map((post) => (
+          <li key={post.id}>
+            {post.title} <button onClick={() => handleDelete(post.id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 };
 
 export default PostList;

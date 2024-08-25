@@ -1,4 +1,3 @@
-import React from 'react';
 import { useLocation } from 'react-router-dom';
 import LogoutButton from './LogoutButton';
 
@@ -7,7 +6,7 @@ const Footer = () => {
     const hideLogoutButton = location.pathname === '/login' || location.pathname === '/';
 
     return (
-        <footer style={{ textAlign: 'center', marginTop: '20px' }}>
+        <footer style={{ position: 'absolute', bottom: '20px' }}>
             {!hideLogoutButton && <LogoutButton />}
         </footer>
     );

@@ -1,0 +1,14 @@
+.add-post-modal {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(108, 122, 137, .5);
+    border-radius: 12px;
+    background-color: white;
+    max-width: 720px;
+    height: fit-content;
+    margin-top: 10%;
+    box-sizing: border-box;
+}

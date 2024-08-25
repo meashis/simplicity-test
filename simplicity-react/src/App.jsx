@@ -6,6 +6,7 @@ import Welcome from "./pages/Welcome";
 import LoginPage from "./pages/LoginPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Footer from "./components/Footer";
+import "./App.css";
 
 function App() {
   return (

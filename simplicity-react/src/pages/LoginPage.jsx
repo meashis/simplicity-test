@@ -2,12 +2,16 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../api/api'; // Import the loginUser function
 import "./LoginPage.css";
+import { setUser } from '../redux/userSlice';
+import { useDispatch } from 'react-redux';
 
 const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -16,6 +20,9 @@ const LoginPage = () => {
             const data = await loginUser(username, password);
             // Save the token in localStorage or sessionStorage
             localStorage.setItem('token', data.token); // Adjust based on your API response structure
+
+            // Dispatch the setUser action to store user info in Redux
+            dispatch(setUser({ ...data.user }));
 
             // Redirect to the posts page after successful login
             navigate('/posts');
