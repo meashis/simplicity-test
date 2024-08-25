@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api'; // Replace with your Node.js API URL
+const API_URL = process.env.API_URL || 'http://localhost:5000/api'; // Replace with your Node.js API URL
 
 const getAuthHeaders = () => {
     const token = localStorage.getItem('token');
