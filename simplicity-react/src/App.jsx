@@ -7,6 +7,7 @@ import LoginPage from "./pages/LoginPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Footer from "./components/Footer";
 import "./App.css";
+import SinglePostPage from "./pages/PostPage";
 
 function App() {
   return (
@@ -21,6 +22,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <PostsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/posts/:postId"
+            element={
+              <ProtectedRoute>
+                <SinglePostPage />
               </ProtectedRoute>
             }
           />

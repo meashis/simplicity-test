@@ -24,7 +24,7 @@ const PostsPage = () => {
   };
 
   return (
-    <div>
+    <div className="posts-wrapper">
       <h1>Posts</h1>
       <button onClick={showAddPostModalHandler}>Add Post</button>
       <PostList lastFetched={lastFetched} />

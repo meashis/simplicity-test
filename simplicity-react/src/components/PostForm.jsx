@@ -39,11 +39,6 @@ const PostForm = ({ postId, existingPost, onSuccess, closeModal }) => {
           <div className="rich-text-editor-quill">
             <RicTextEditor setRichValue={(value) => setContent(value)} />
           </div>
-          {/* <textarea
-            className="post-form-content-textarea"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          ></textarea> */}
         </div>
         <div className="create-post-cta">
           <button className="post-submit-button" type="submit">

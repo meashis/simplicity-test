@@ -22,13 +22,6 @@ a:hover {
   color: #535bf2;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
 
 h1 {
   font-size: 3.2em;
@@ -37,7 +30,7 @@ h1 {
 
 button {
   border-radius: 8px;
-  border: 1px solid transparent;
+  border-color: rgba(255, 255, 255, 0.87);
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;

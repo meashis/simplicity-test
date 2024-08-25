@@ -36,7 +36,7 @@ const LoginPage = () => {
         <div className="login-container">
             <h2>Login</h2>
             <form onSubmit={handleSubmit}>
-                <div>
+                <div className='username-wrapper'>
                     <label>Username:</label>
                     <input
                         type="text"
@@ -45,7 +45,7 @@ const LoginPage = () => {
                         required
                     />
                 </div>
-                <div>
+                <div className='password-wrapper'>
                     <label>Password:</label>
                     <input
                         type="password"

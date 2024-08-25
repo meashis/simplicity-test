@@ -1,10 +1,9 @@
 .login-container {
-    max-width: 400px;
-    margin: 50px auto;
+    width: fit-content;
+    margin: 20% auto;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    margin: auto;
 }
 
 .login-container h2 {
@@ -22,9 +21,10 @@
 }
 
 .login-container input {
-    margin-bottom: 10px;
+    width: 100%;
     padding: 8px;
-    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(108, 122, 137, .5);
 }
 
 .login-container button {
@@ -39,4 +39,11 @@
 
 .login-container button:hover {
     background-color: #0056b3;
+}
+
+.username-wrapper, .password-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
 }
