@@ -31,8 +31,9 @@ const PostsPage = () => {
       <Modal
         isOpen={showAddPostModal}
         onRequestClose={closeModal}
-        contentLabel="Example Modal"
+        contentLabel="Add Post Modal"
         className="add-post-modal"
+        closeTimeoutMS={300} // Match this with the CSS transition duration
         style={bg}
       >
         <PostForm onSuccess={onSuccessHandle} closeModal={closeModal} />

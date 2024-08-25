@@ -8,6 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Footer from "./components/Footer";
 import "./App.css";
 import SinglePostPage from "./pages/PostPage";
+import PostEditPage from "./pages/PostEditPage";
 
 function App() {
   return (
@@ -30,6 +31,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <SinglePostPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/posts/:postId/edit"
+            element={
+              <ProtectedRoute>
+                <PostEditPage />
               </ProtectedRoute>
             }
           />

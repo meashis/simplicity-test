@@ -1,16 +1,23 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from "react";
 import { createPost, updatePost } from "../api/api";
 
 import "./PostForm.css";
 import RicTextEditor from "./RicTextEditor";
 
-const PostForm = ({ postId, existingPost, onSuccess, closeModal }) => {
-  const [title, setTitle] = useState(existingPost?.title || "");
-  const [content, setContent] = useState(existingPost?.content || "");
+const PostForm = ({ postId, onSuccess, closeModal }) => {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+
+  const [titleError, setTitleError] = useState("");
+  const [contentError, setContentError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setTitleError();
+    setContentError();
+    if (!title) return setTitleError("Title missing");
+    if (!content) return setContentError("Content missing");
     const post = { title, content };
     if (postId) {
       await updatePost(postId, post);
@@ -41,11 +48,10 @@ const PostForm = ({ postId, existingPost, onSuccess, closeModal }) => {
           </div>
         </div>
         <div className="create-post-cta">
+          {titleError && <div style={{ color: "red" }}>{titleError}</div>}
+          {contentError && <div style={{ color: "red" }}>{contentError}</div>}
           <button className="post-submit-button" type="submit">
-            {postId ? "Update" : "Create"}
-          </button>
-          <button className="cancel-submit-button" onClick={closeModal}>
-            close
+            Create
           </button>
         </div>
       </form>

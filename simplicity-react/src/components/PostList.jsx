@@ -25,6 +25,9 @@ const PostList = ({ lastFetched }) => {
   const handlePostView = (id) => {
     navigate(`/posts/${id}`);
   };
+  const handlePostEdit = (id) => {
+    navigate(`/posts/${id}/edit`);
+  };
 
   function stripHtmlUsingDOMParser(html) {
     const doc = new DOMParser().parseFromString(html, "text/html");
@@ -47,7 +50,7 @@ const PostList = ({ lastFetched }) => {
             <div className="post-list-cta">
               <button onClick={() => handleDelete(post.id)}>Delete</button>
               <button onClick={() => handlePostView(post.id)}>View</button>
-              <button onClick={() => {}}>Edit</button>
+              <button onClick={() => handlePostEdit(post.id)}>Edit</button>
             </div>
           </div>
         ))}

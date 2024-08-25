@@ -4,8 +4,8 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './RichTextEdit.css'
 
-export default function RicTextEditor({ setRichValue }) {
-  const [value, setValue] = useState("");
+export default function RicTextEditor({ defaultValue, setRichValue }) {
+  const [value, setValue] = useState(defaultValue);
 
   const setValueHandle = (value) => {
     setValue(value);
