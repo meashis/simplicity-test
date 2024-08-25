@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Comment = require('../models/Comment');
-const auth = require('../middleware/auth');
+const Comment = require("../models/Comment");
+const auth = require("../middleware/auth");
 
 /**
  * @swagger
@@ -55,14 +55,14 @@ const auth = require('../middleware/auth');
  *       500:
  *         description: Some server error
  */
-router.post('/', auth, async (req, res) => {
-    try {
-        const pool = req.db;
-        await Comment.addComment(pool, req.body.postId, req.user.id, req.body.comment);
-        res.status(201).json({ msg: 'Comment added successfully' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+router.post("/", auth, async (req, res) => {
+  try {
+    const pool = req.db;
+    await Comment.addComment(pool, req.body.postId, req.user.id, req.body.comment);
+    res.status(201).json({ msg: "Comment added successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 /**
@@ -88,17 +88,31 @@ router.post('/', auth, async (req, res) => {
  *               items:
  *                 $ref: '#/components/schemas/Comment'
  */
-router.get('/:postId', async (req, res) => {
-    try {
-        const pool = req.db;
-        const result = await pool.request()
-            .input('postId', req.params.postId)
-            .query('SELECT * FROM Comments WHERE post_id = @postId');
-
-        res.json(result.recordset);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+router.get("/:postId", async (req, res) => {
+  try {
+    const pool = req.db;
+    const result = await // .query('SELECT * FROM Comments WHERE post_id = @postId');
+    pool.request().input("postId", req.params.postId).query(`
+                SELECT
+                    Comments.id AS comment_id,
+                    Comments.comment,
+                    Comments.post_id,
+                    Comments.commented_at,
+                    Users.id AS user_id,
+                    Users.username
+                FROM
+                    Comments
+                INNER JOIN
+                    Users
+                ON
+                    Comments.user_id = Users.id
+                WHERE
+                    Comments.post_id = @postId;
+            `);
+    res.json(result.recordset);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 /**
@@ -120,17 +134,15 @@ router.get('/:postId', async (req, res) => {
  *       500:
  *         description: Some server error
  */
-router.delete('/:id', auth, async (req, res) => {
-    try {
-        const pool = req.db;
-        await pool.request()
-            .input('id', req.params.id)
-            .query('DELETE FROM Comments WHERE id = @id');
+router.delete("/:id", auth, async (req, res) => {
+  try {
+    const pool = req.db;
+    await pool.request().input("id", req.params.id).query("DELETE FROM Comments WHERE id = @id");
 
-        res.json({ msg: 'Comment deleted successfully' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    res.json({ msg: "Comment deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 module.exports = router;

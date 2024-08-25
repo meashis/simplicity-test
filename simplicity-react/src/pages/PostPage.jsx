@@ -42,6 +42,11 @@ const SinglePostPage = () => {
     fetchPost();
   }, [postId]);
 
+  function capitalizeFirstCharacter(str) {
+    if (!str) return ''; // Handle empty strings
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
   useEffect(() => {
     fetchComments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -60,10 +65,10 @@ const SinglePostPage = () => {
           {comments.map((cmt) => {
             return (
               <div className="comment-card" key={cmt?.idß}>
-                <div className="avatar-wrapper">J</div>
+                <div className="avatar-wrapper">{capitalizeFirstCharacter(cmt?.username?.charAt(0))}</div>
                 <div className="comment-content-wrapper">
                   <div className="comment-header">
-                    Jack: at <span className="comment-ago">{moment(cmt.commented_at).fromNow()}</span>
+                   {capitalizeFirstCharacter(cmt?.username)} <span className="comment-ago">at {moment(cmt.commented_at).fromNow()}</span>
                   </div>
                   <div className="comment-content">{cmt.comment}</div>
                 </div>

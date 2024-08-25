@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Post = require('../models/Post');
-const auth = require('../middleware/auth');
+const Post = require("../models/Post");
+const auth = require("../middleware/auth");
 
 /**
  * @swagger
@@ -58,14 +58,14 @@ const auth = require('../middleware/auth');
  *               items:
  *                 $ref: '#/components/schemas/Post'
  */
-router.get('/', async (req, res) => {
-    try {
-        const pool = req.db;
-        const result = await pool.request().query('SELECT * FROM Posts');
-        res.json(result.recordset);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+router.get("/", async (req, res) => {
+  try {
+    const pool = req.db;
+    const result = await pool.request().query("SELECT * FROM Posts");
+    res.json(result.recordset);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 /**
@@ -91,21 +91,19 @@ router.get('/', async (req, res) => {
  *       404:
  *         description: The post was not found
  */
-router.get('/:id', async (req, res) => {
-    try {
-        const pool = req.db;
-        const result = await pool.request()
-            .input('id', req.params.id)
-            .query('SELECT * FROM Posts WHERE id = @id');
+router.get("/:id", async (req, res) => {
+  try {
+    const pool = req.db;
+    const result = await pool.request().input("id", req.params.id).query("SELECT * FROM Posts WHERE id = @id");
 
-        if (result.recordset.length === 0) {
-            return res.status(404).json({ msg: 'Post not found' });
-        }
-
-        res.json(result.recordset[0]);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ msg: "Post not found" });
     }
+
+    res.json(result.recordset[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 /**
@@ -126,14 +124,14 @@ router.get('/:id', async (req, res) => {
  *       500:
  *         description: Some server error
  */
-router.post('/', auth, async (req, res) => {
-    try {
-        const pool = req.db;
-        await Post.createPost(pool, req.user.username, req.body.title, req.body.content);
-        res.status(201).json({ msg: 'Post created successfully' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+router.post("/", auth, async (req, res) => {
+  try {
+    const pool = req.db;
+    await Post.createPost(pool, req.user.username, req.body.title, req.body.content);
+    res.status(201).json({ msg: "Post created successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 /**
@@ -163,19 +161,20 @@ router.post('/', auth, async (req, res) => {
  *       500:
  *         description: Some server error
  */
-router.put('/:id', auth, async (req, res) => {
-    try {
-        const pool = req.db;
-        await pool.request()
-            .input('id', req.params.id)
-            .input('title', req.body.title)
-            .input('content', req.body.content)
-            .query('UPDATE Posts SET title = @title, content = @content, updated_at = GETDATE() WHERE id = @id');
+router.put("/:id", auth, async (req, res) => {
+  try {
+    const pool = req.db;
+    await pool
+      .request()
+      .input("id", req.params.id)
+      .input("title", req.body.title)
+      .input("content", req.body.content)
+      .query("UPDATE Posts SET title = @title, content = @content, updated_at = GETDATE() WHERE id = @id");
 
-        res.json({ msg: 'Post updated successfully' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    res.json({ msg: "Post updated successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 /**
@@ -199,17 +198,32 @@ router.put('/:id', auth, async (req, res) => {
  *       500:
  *         description: Some server error
  */
-router.delete('/:id', auth, async (req, res) => {
-    try {
-        const pool = req.db;
-        await pool.request()
-            .input('id', req.params.id)
-            .query('DELETE FROM Posts WHERE id = @id');
+router.delete("/:id", auth, async (req, res) => {
+  const postId = req.params.id;
+  try {
+    const pool = req.db;
+    const transaction = pool.transaction();
 
-        res.json({ msg: 'Post deleted successfully' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    await transaction.begin();
+
+    // Delete associated comments first
+    await transaction.request().input("postId", postId).query(`
+                DELETE FROM Comments
+                WHERE post_id = @postId;
+            `);
+
+    // Delete the post
+    await transaction.request().input("postId", postId).query(`
+                DELETE FROM Posts
+                WHERE id = @postId;
+            `);
+
+    await transaction.commit();
+
+    res.json({ msg: "Post and associated comments deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 module.exports = router;
